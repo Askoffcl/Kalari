@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+  <div class="card shadow-lg border-0 rounded-3" style="margin-top: 100px;">
+    <div class="card-body p-4">
+      <h2 class="mb-4 text-center text-primary fw-bold">Update Event</h2>
+
+      <!-- Important: enctype added for file upload -->
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Event Name -->
+        <div class="mb-3">
+          <label for="id_name" class="form-label fw-semibold">Event Name</label>
+          {{ form.name }}
+          <div class="form-text">Enter a descriptive name for your event.</div>
+        </div>
+
+        <!-- Event Date -->
+        <div class="mb-3">
+          <label for="id_date" class="form-label fw-semibold">Event Date</label>
+          {{ form.date }}
+          <div class="form-text">Choose the date of the event.</div>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+          <label for="id_loc" class="form-label fw-semibold">Location</label>
+          {{ form.loc }}
+          <div class="form-text">Specify where the event will take place.</div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+          <label for="id_image" class="form-label fw-semibold">Event Image</label>
+          {{ form.image }}
+          <div class="form-text">Upload an image for this event (optional).</div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="id_desc" class="form-label fw-semibold">Description</label>
+          {{ form.desc }}
+          <div class="form-text">Provide a short description of the event.</div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-end gap-2">
+          <a href="{% url 'view_event' %}" class="btn btn-outline-secondary">Cancel</a>
+          <button type="submit" class="btn btn-success px-4">💾 Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

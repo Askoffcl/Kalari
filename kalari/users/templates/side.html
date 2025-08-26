@@ -1,0 +1,41 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'side.css' %}" />
+
+<div class="full">
+  <div class="side">
+    
+
+
+      {% if request.user.role == 'student' %}
+      <a href="/kalari/training/"><button>View Materials</button></a>
+                  <a href="/kalari/view_event"><button>View Event</button></a>
+                       <a href="/kalari/my_events"><button>My Events</button></a>
+                            <a href="/kalari/view_class"><button>View class</button></a>
+                            <a href="/kalari/my_classes"><button>My classes</button></a>
+                            <a href="/kalari/feedback"><button>Feedback</button></a>
+                            <a href="/kalari/view_feedback"><button>View Feedback</button></a>
+                   {% endif %}
+    {% if request.user.role == 'teacher' %}
+    <a href="/kalari/classr"><button>Add Class</button></a>
+     <a href="/kalari/view_class"><button>View class</button></a>
+        <a href="/kalari/my_class"><button>Enrolled class</button></a>
+     <a href="/kalari/trainings/"><button>View Materials</button></a>
+    <a href="/kalari/view_feedbacks"><button>View Feedback</button></a>
+
+
+    {% endif %} 
+    {% if request.user.is_superuser %}
+      <a href="/kalari/event"><button>Add Events</button></a>
+    <a href="/kalari/view_event"><button>View Event</button></a>
+
+   <a href="/kalari/my_event"><button>Registered Events</button></a>
+    <a href="/students"><button>View Students</button></a>
+    <a href="/instructors"><button>View Instructor</button></a>
+      <a href="/kalari/enroll_report"><button>View Report</button></a>
+ 
+
+    {% endif %} 
+
+  </div>
+</div>

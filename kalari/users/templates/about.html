@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+About Kalaripayattu
+{%  endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'about.css' %}">
+{% endblock %}
+{% block content %}
+
+
+    <div class="overlay">
+        <header>
+            <h1>About Kalaripayattu</h1>
+        </header>
+
+        <div class="content">
+            <p>
+                Kalaripayattu is one of the oldest martial arts in the world, originating in Kerala, India. 
+                More than just a fighting technique, it is a system of physical training, healing practices, 
+                and spiritual discipline.
+            </p>
+
+            <h2>History</h2>
+            <p>
+                The word "Kalari" means battlefield, and "Payattu" means fight or practice. 
+                With origins tracing back over 3,000 years, it combines strikes, kicks, grappling, 
+                weaponry, and healing techniques.
+            </p>
+
+            <h2>Philosophy</h2>
+            <p>
+                At its core, Kalaripayattu is about balance between body, mind, and soul. 
+                It teaches respect, discipline, and harmony with nature.
+            </p>
+
+            <h2>Modern Relevance</h2>
+            <p>
+                Today, Kalaripayattu is practiced not only as a martial art but also as a form of fitness, 
+                meditation, and performance art. It continues to inspire people around the world.
+            </p>
+
+            <a href="/" class="btn-back">← Back to Home</a>
+        </div>
+    </div>
+{% endblock %}

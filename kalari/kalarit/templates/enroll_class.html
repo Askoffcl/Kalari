@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 border-end p-0">
+      {% include "side.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 col-lg-10 p-4" style="margin-top: 100px;">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h2 class="mb-4 text-center">📚 Enrolled Classes</h2>
+
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center align-middle">
+              <thead class="table-dark">
+                <tr>
+                  {% if request.user.role == 'teacher' %}
+                    <th>Student</th>
+                  {% endif %}
+                  <th>Class</th>
+                  <th>Enrolled Date</th>
+                  <th>Class Date</th>
+                  <th>Attendance</th>
+                  <th>Chat</th>
+                  {% if request.user.role == 'teacher' %}
+                    <th>Action</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for enroll in enrollments %}
+                <tr>
+                  {% if request.user.role == 'teacher' %}
+                    <td>{{ enroll.userid.name }}</td>
+                  {% endif %}
+                  <td class="fw-semibold">{{ enroll.classid.name }}</td>
+                  <td>{{ enroll.date|date:"d-m-Y H:i" }}</td>
+                  <td>{{ enroll.classid.date|date:"d-m-Y H:i" }}</td>
+                  <td>
+                    <span class="badge px-3 py-2 fs-6 
+                      {% if enroll.attend == 'Present' %}
+                        bg-success
+                      {% elif enroll.attend == 'Absent' %}
+                        bg-danger
+                      {% else %}
+                        bg-secondary
+                      {% endif %}">
+                      {{ enroll.attend }}
+                    </span>
+                  </td>
+
+                  <!-- Chat Button -->
+                  <td>
+                    <a href="{% url 'class_chat' enroll.classid.id %}" 
+                       class="btn btn-outline-primary btn-sm px-3">
+                      💬 Chat
+                    </a>
+                  </td>
+
+                  {% if request.user.role == 'teacher' %}
+                  <td>
+                    {% if enroll.attend == 'Not Started' %}
+                      <a href="{% url 'toggle_attendance' enroll.id %}?status=Present" 
+                         class="btn btn-outline-success btn-sm px-3">
+                        Mark Present
+                      </a>
+                      <a href="{% url 'toggle_attendance' enroll.id %}?status=Absent" 
+                         class="btn btn-outline-danger btn-sm px-3">
+                        Mark Absent
+                      </a>
+                    {% elif enroll.attend == 'Present' %}
+                      <a href="{% url 'toggle_attendance' enroll.id %}" 
+                         class="btn btn-outline-danger btn-sm px-3">
+                        Mark Absent
+                      </a>
+                    {% else %}
+                      <a href="{% url 'toggle_attendance' enroll.id %}" 
+                         class="btn btn-outline-success btn-sm px-3">
+                        Mark Present
+                      </a>
+                    {% endif %}
+                  </td>
+                  {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="text-center text-muted py-4">
+                    You have not enrolled in any classes yet.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+{% include 'side.html' %}
+
+<div class="container-fluid" style="margin-left: 260px; padding-top: 40px; max-width: calc(100% - 260px);">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+      <h2 class="fw-bold text-dark mb-4 text-center">Your Feedback</h2>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr class="text-center">
+              <th style="width: 60px;">#</th>
+              <th>Class</th>
+              <th>Date Attended</th>
+              <th>Rating</th>
+              <th>Comments</th>
+              <th>Reply</th>
+              <th>Replied At</th>
+              {% if request.user.role == 'teacher' %}
+              <th>Actions</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for fb in feedbacks %}
+            <tr>
+              <td class="text-center">{{ forloop.counter }}</td>
+              <td class="text-center">{{ fb.class_attended.classid.name }}</td>
+              <td class="text-center">{{ fb.class_attended.classid.date|date:"d M, Y" }}</td>
+
+              <!-- Rating as stars -->
+              <td class="text-center">
+                {% for i in "12345"|make_list %}
+                  {% if forloop.counter <= fb.rating %}
+                    <span style="color: gold;">&#9733;</span>
+                  {% else %}
+                    <span style="color: lightgray;">&#9733;</span>
+                  {% endif %}
+                {% endfor %}
+              </td>
+
+              <td class="text-center">{{ fb.comment }}</td>
+              <td class="text-center">{{ fb.reply|default:"-" }}</td>
+              <td class="text-center">
+                {% if fb.reply_at %}
+                  {{ fb.reply_at|date:"d M, Y · H:i" }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+
+              {% if request.user.role == 'teacher' %}
+<td class="text-center">
+  {% if not fb.reply %}
+    <a href="{% url 'reply_feedback' fb.id %}" 
+       class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm">
+      <i class="bi bi-reply me-1"></i> Reply
+    </a>
+  {% else %}
+    <span class="text-success fw-semibold">Replied</span>
+  {% endif %}
+</td>
+{% endif %}
+
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="8" class="text-center text-muted py-4">
+                No feedback available yet.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

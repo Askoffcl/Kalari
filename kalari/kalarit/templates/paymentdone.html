@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Payment Successful{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'kalarit/paymentdone.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="order-success-container">
+  <div class="order-card text-center">
+    
+    <h2>✅ Payment Successful!</h2>
+    
+    <a href="{% url 'homepage' %}" class="btn btn-primary mt-4" style="background-color:#3d0909; border:none;">
+      ← Back to Homepage
+    </a>
+    
+  </div>
+</div>
+{% endblock %}

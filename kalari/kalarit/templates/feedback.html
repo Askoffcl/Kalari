@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+{% include 'side.html' %}
+
+<div class="container-fluid" style="margin-left: 260px; padding-top: 40px; max-width: calc(100% - 260px);">
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+      <h2 class="fw-bold text-dark mb-4 text-center">Submit Feedback</h2>
+
+      <form method="post">
+        {% csrf_token %}
+
+        <label for="class_name">Class Attended</label>
+        <select id="class_name" name="class_name" required class="form-select mb-3">
+  <option value="">-- Select Class --</option>
+  {% for c in classes %}
+    {% if c.id not in submitted_classes %}
+      <option value="{{ c.id }}">{{ c.classid.name }}</option>
+    {% endif %}
+  {% endfor %}
+</select>
+
+
+ 
+
+        <label for="rating">Rating</label>
+        <select id="rating" name="rating" required class="form-select mb-3">
+          <option value="">-- Select Rating --</option>
+          <option value="5">★★★★★ (Excellent)</option>
+          <option value="4">★★★★☆ (Very Good)</option>
+          <option value="3">★★★☆☆ (Good)</option>
+          <option value="2">★★☆☆☆ (Fair)</option>
+          <option value="1">★☆☆☆☆ (Poor)</option>
+        </select>
+
+        <label for="comments">Comments</label>
+        <textarea id="comments" name="comments" rows="4" placeholder="Write your feedback here..." required class="form-control mb-3"></textarea>
+
+        <button type="submit" class="btn btn-primary w-100" style="   background-color: #3d0909;">Submit Feedback</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

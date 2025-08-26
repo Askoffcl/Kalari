@@ -1,0 +1,265 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== General Body Styles ===== */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f7f9fc;
+    color: #2c3e50;
+}
+/* ===== Main Content Spacing ===== */
+.main-content {
+    margin-left: 220px; /* width of sidebar */
+    padding: 30px 40px 50px 40px;
+}
+
+/* ===== Filter Row Flex Fix ===== */
+.row.mb-4 .col-md-6 {
+    display: flex;
+    justify-content: flex-start; /* keep dropdown left-aligned */
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ===== Card Centering ===== */
+.row.g-4 .col-md-6,
+.row.g-4 .col-md-12 {
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    width: 100%;
+    max-width: 600px; /* prevent chart from stretching too much */
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px){
+    .main-content {
+        margin-left: 0; /* remove sidebar margin for smaller screens */
+        padding: 20px;
+    }
+    .row.mb-4 .col-md-6 {
+        justify-content: center;
+    }
+}
+
+
+/* ===== Page Heading ===== */
+h2.mb-4 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #34495e;
+    margin-bottom: 40px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ===== Filter Styles ===== */
+#classFilter {
+    flex: 1;
+    padding: 0.6rem 1.2rem;
+    border-radius: 14px;
+    border: 1px solid #dcdde1;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+#classFilter:focus {
+    outline: none;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 12px rgba(108,92,231,0.3);
+}
+
+#filterBtn {
+    padding: 0.6rem 1.6rem;
+    font-size: 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#6c5ce7,#00b894);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+#filterBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* ===== Card Styles ===== */
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px 25px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.07);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.card h5 {
+    font-weight: 600;
+    font-size: 18px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* ===== Chart Styles ===== */
+canvas {
+    max-width: 100%;
+    height: 340px !important;
+}
+
+/* ===== Grid Spacing ===== */
+
+
+.row.mb-4 .col-md-6 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px){
+    .main-content {
+        padding: 20px 15px 40px 15px;
+    }
+    #filterBtn {
+        margin-top: 12px;
+        width: 100%;
+        margin-left: 0;
+    }
+    .row.mb-4 .col-md-6 {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'side.html' %}
+<div class="main-content">
+    <h2 class="mb-4">📊 Enrollment, Attendance & Finance Report</h2>
+
+    <!-- ===== Filter Row ===== -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <select id="classFilter" class="form-select">
+                <option value="">-- Select a Class --</option>
+                {% for cls in classes %}
+                    <option value="{{ cls.id }}">{{ cls.name }}</option>
+                {% endfor %}
+            </select>
+            <button id="filterBtn">Filter</button>
+        </div>
+    </div>
+
+    <!-- ===== Charts Row ===== -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <h5>Attendance Overview</h5>
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <h5>Enrollments per Class</h5>
+                <canvas id="classChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Finance Row ===== -->
+    <div class="row g-4 mt-3">
+        <div class="col-md-12">
+            <div class="card">
+                <h5>💰 Finance Report</h5>
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Chart.js ===== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let attendanceData = {{ attendance_data|safe }};
+let classData = {{ class_data|safe }};
+let financeData = {{ finance_data|safe }};
+
+let attendanceChart = new Chart(document.getElementById('attendanceChart'), {
+    type: 'doughnut',
+    data: {
+        labels: Object.keys(attendanceData),
+        datasets: [{ 
+            data: Object.values(attendanceData), 
+            backgroundColor: ['#ff6b6b', '#48dbfb', '#1dd1a1'] 
+        }]
+    }
+});
+
+let classChart = new Chart(document.getElementById('classChart'), {
+    type: 'bar',
+    data: {
+        labels: classData.labels,
+        datasets: [{ 
+            label: 'Enrollments', 
+            data: classData.counts, 
+            backgroundColor: '#6c5ce7' 
+        }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+});
+
+let financeChart = new Chart(document.getElementById('financeChart'), {
+    type: 'bar',
+    data: {
+        labels: ["Total Revenue"],
+        datasets: [{ label: "Finance", data: [financeData.total], backgroundColor: ["#6c5ce7"] }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+});
+
+document.getElementById('filterBtn').addEventListener('click', function() {
+    let classId = document.getElementById('classFilter').value;
+    if(classId){
+        fetch(`/kalari/reports/class/${classId}/`).then(res=>res.json()).then(data=>{
+            attendanceChart.data.labels = Object.keys(data.attendance);
+            attendanceChart.data.datasets[0].data = Object.values(data.attendance);
+            attendanceChart.update();
+
+            classChart.data.labels = data.class.labels;
+            classChart.data.datasets[0].data = data.class.counts;
+            classChart.update();
+
+            financeChart.data.datasets[0].data = [data.finance.total];
+            financeChart.update();
+        });
+    } else {
+        attendanceChart.data.labels = Object.keys(attendanceData);
+        attendanceChart.data.datasets[0].data = Object.values(attendanceData);
+        attendanceChart.update();
+
+        classChart.data.labels = classData.labels;
+        classChart.data.datasets[0].data = classData.counts;
+        classChart.update();
+
+        financeChart.data.datasets[0].data = [financeData.total];
+        financeChart.update();
+    }
+});
+</script>
+{% endblock %}

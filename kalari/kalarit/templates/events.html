@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+New Class
+{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'sregister.css' %}">
+{% endblock %}
+
+
+  {% block content %}
+
+    <main>
+      <h2>New Event</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if form.errors %}
+  <ul>
+    {% for field in form %}
+      {% for error in field.errors %}
+        <li style="color:red">{{ field.label }}: {{ error }}</li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+        <button type="submit">Register</button>
+      </form>
+
+    </main>
+  
+    {% endblock %}

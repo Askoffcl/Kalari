@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+     {% block title %} Kalari{% endblock %}
+    {% block extra_head %}
+    <link rel="stylesheet" href="{% static 'homepage.css' %}" />
+     {% endblock %}
+   
+
+{% block content %}
+    <main>
+      {% include "side.html"%}
+        <div class="profile">
+          <div class="profile-card">
+            {% if request.user.image and request.user.image.name %}
+            <img src="{{ request.user.image.url }}" alt="User Image" />
+            {% else %}
+            <img src="{% static 'default.jpg' %}" alt="Default Image" />
+            {% endif %}
+            <p><strong>Name:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone Number:</strong> {{ user.phone }}</p>
+            <p><strong>Address:</strong> {{ user.address }}</p>
+         
+            <a href="/editProfile"><button type="button" class="b1" >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+  <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+</svg>
+</button></a>
+          </div>
+        </div>
+      </div>
+    </main>
+   {% endblock %}

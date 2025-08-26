@@ -1,0 +1,185 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+Events
+{% endblock %}
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'kalarit/view_class.css' %}">
+<style>
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 40px;
+    }
+
+    .class-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .class-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 22px rgba(0,0,0,0.15);
+    }
+
+    .class-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .class-content {
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    .class-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: #1f2937;
+        font-weight: 600;
+    }
+
+    .class-info {
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: #4b5563;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .upcoming { background: #dbeafe; color: #1e40af; }
+    .ongoing { background: #dcfce7; color: #166534; }
+    .completed { background: #fee2e2; color: #991b1b; }
+
+    .card-actions {
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .card-actions .btn {
+        padding: 8px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+        background-color: #3b82f6;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #2563eb;
+    }
+
+    .btn-danger {
+        background-color: #ef4444;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #dc2626;
+    }
+
+    .btn-success {
+        background-color: #10b981;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #059669;
+    }
+
+    .btn[disabled] {
+        background-color: #9ca3af !important;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'side.html' %}
+<header>
+  <h1 style="text-align: center; margin-top: 30px; font-weight: bold; color:#1e293b;">Events Available</h1>
+</header>
+
+<div class="container">
+    {% if request.user.role == 'teacher' %}
+    <div style="margin-bottom: 20px; text-align: right;">
+        <a href="{% url 'add_training' %}" class="btn btn-success">+ Add Training Material</a>
+    </div>
+    {% endif %}
+
+    <div class="card-container">
+        {% for item in event_data %}
+        <div class="class-card">
+            {% if item.obj.image %}
+                <img src="{{ item.obj.image.url }}" alt="{{ item.obj.name }}">
+            {% else %}
+                <img src="{% static 'images/default_class.jpg' %}" alt="Default Event Image">
+            {% endif %}
+            
+            <div class="class-content">
+                <!-- Status Badge -->
+                {% if item.status == "Upcoming" %}
+                    <span class="status-badge upcoming">Upcoming</span>
+                {% elif item.status == "Ongoing" %}
+                    <span class="status-badge ongoing">Ongoing</span>
+                {% else %}
+                    <span class="status-badge completed">Completed</span>
+                {% endif %}
+
+                <h3>{{ item.obj.name }}</h3>
+                <p class="class-info"><strong>Schedule:</strong> {{ item.obj.date|date:"M d, Y " }}</p>
+
+                {% if item.status == "Upcoming" %}
+                    <p class="class-info"><strong>Registration closes:</strong> {{ item.registration_close|date:"M d, Y " }}</p>
+                {% endif %}
+
+                <p class="class-info"><strong>Description:</strong> {{ item.obj.desc }}</p>
+                <p class="class-info"><strong>Location:</strong> {{ item.obj.loc }}</p>
+                   <p class="class-info"><strong>Fees:</strong>₹{{ item.obj.amount }}</p>
+
+                <div class="card-actions">
+                    {% if request.user.role == 'teacher' or request.user.is_superuser %}
+                        <a href="{% url 'update_event' item.obj.id %}" class="btn btn-primary btn-sm">Update</a>
+                        <a href="{% url 'delete_event' item.obj.id %}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete this event?');">Delete</a>
+                    {% endif %}
+
+                    {% if request.user.role == 'student' %}
+                        {% if item.obj.id in paid_events %}
+                            <button type="button" class="btn" style="background-color:#059669; color:white;">Registered</button>
+                        {% else %}
+                            {% if item.registration_open %}
+                                <a href="{% url 'payments' item.obj.id %}" class="btn btn-success">Register</a>
+                            {% else %}
+                                <button type="button" class="btn" disabled>Registration Closed</button>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

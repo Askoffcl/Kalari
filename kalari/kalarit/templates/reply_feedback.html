@@ -1,0 +1,22 @@
+<!-- reply_feedback.html -->
+{% extends "layout.html" %}
+{% block content %}
+{% include 'side.html' %}
+
+<div class="container" style="margin-left: 260px; padding-top: 40px; max-width: calc(100% - 260px);">
+  <div class="card shadow-sm border-0 rounded-4 p-4">
+    <h2 class="fw-bold mb-4">Reply to Feedback</h2>
+
+    <p><strong>Class:</strong> {{ feedback.class_attended.classid.name }}</p>
+    <p><strong>Student Comment:</strong> {{ feedback.comment }}</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <label for="reply">Your Reply</label>
+      <textarea name="reply" id="reply" rows="4" class="form-control" required>{{ feedback.reply }}</textarea>
+      <button type="submit" class="btn btn-primary mt-3">Submit Reply</button>
+      <a href="{% url 'view_feedback' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

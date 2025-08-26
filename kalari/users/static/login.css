@@ -1,0 +1,95 @@
+
+      main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+        margin-bottom: 110px;
+      
+      }
+
+      form {
+        background-color: white;
+        padding: 30px 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 50px;
+      }
+
+      label {
+        font-weight: 500;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 15px;
+        width: 100%;
+      }
+
+      button {
+        padding: 12px;
+   background-color:  #79443B;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+         background-color:  #b7796e;
+      }
+
+      a {
+        font-size: 14px;
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .link-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .bottom-link {
+        text-align: center;
+        margin-top: 10px;
+      }
+
+
+.txt {
+  background-color:  #007bff;
+  padding: 60px 500px 0px 500px;
+  text-align: center;
+  color: white;
+  margin-top: 2px;
+  position: fixed;
+}
+
+.txt h1 {
+  font-size: 40px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.txt p {
+  font-size: 17px;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}

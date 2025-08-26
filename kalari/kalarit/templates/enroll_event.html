@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2  border-end p-0">
+      {% include "side.html" %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 col-lg-10 p-4" style="margin-top: 100px;">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h2 class="mb-4 text-center">🎉  Enrolled Events</h2>
+          
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center align-middle">
+              <thead class="table-dark">
+                <tr>
+                    <th>Student</th>
+                  <th>Event</th>
+                  <th>Enrolled Date</th>
+                  <th>Description</th>
+                  <th>Location</th>
+                  <th>Payment Method</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for enroll in enrollments %}
+                <tr>
+                    <td>{{ enroll.userid.name }}</td>
+                  <td class="fw-semibold">{{ enroll.eventid.name }}</td>
+                  <td>{{ enroll.date|date:"Y-m-d H:i" }}</td>
+                  <td>{{ enroll.eventid.desc|default:"—" }}</td>
+                  <td>{{ enroll.eventid.loc }}</td>
+                 <td>{%if  enroll.pid.method  == 'upi' %}
+                    UPI
+                    {% else %}
+                    Card Payment
+                    {% endif %}
+                 </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3" class="text-center text-muted py-4">
+                    You have not enrolled in any events yet.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

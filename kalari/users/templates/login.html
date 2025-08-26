@@ -1,0 +1,28 @@
+{% extends 'layout.html' %} {% load static %} {% block title %} Login
+ {% endblock %} {% block extra_head %}
+<link rel="stylesheet" href="{% static 'login.css' %}" />
+
+
+{% endblock %} {% block content %}
+
+<main>
+  <form method="post">
+    {% csrf_token %}
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" />
+
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" />
+
+    <div class="link-group">
+      <a href="/forgotPassword">Forgot Password?</a>
+    </div>
+
+    <button type="submit" >Login</button>
+
+    <div class="bottom-link">
+      <a href="/sregister">Don't have an Account?</a>
+    </div>
+  </form>
+</main>
+{% endblock %}

@@ -1,0 +1,51 @@
+ * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+          sans-serif;
+      }
+
+      body {
+        background-color: #f0f2f5;
+        min-height: 100vh;
+      }
+
+      .full {
+        display: flex;
+        margin-top: 60px;
+    
+      }
+
+      .side {
+        background-color: #3d0909;
+        width: 220px;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        position: fixed;
+        height: calc(100vh - 0px);
+        overflow-y: auto;
+      }
+
+      .side a {
+        text-decoration: none;
+      }
+
+      .side button {
+        width: 100%;
+        padding: 12px;
+              background-color:  #913525;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+        color: #ffffff;
+      }
+
+      .side button:hover {
+        background-color: #ffcc80;
+      }

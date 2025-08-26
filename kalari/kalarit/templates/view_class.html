@@ -1,0 +1,142 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+Classes
+{% endblock %}
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'kalarit/view_class.css' %}">
+<style>
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .class-card {
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease;
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .class-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .class-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+
+    .class-content {
+        padding: 15px;
+        flex-grow: 1;
+    }
+
+    .class-card h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+
+    .class-info {
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .status {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .status.upcoming { color: #007bff; }
+    .status.ongoing { color: #28a745; }
+    .status.completed { color: #6c757d; }
+
+    .card-actions {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .card-actions .btn {
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'side.html' %}
+<header>
+  <h1 style="text-align: center; margin-top: 30px;">Classes Available</h1>
+</header>
+
+<div class="container">
+    {% if request.user.role == 'teacher' %}
+    <div style="margin-bottom: 20px; text-align: right;">
+        <a href="{% url 'add_training' %}" class="btn btn-success">+ Add Training Material</a>
+    </div>
+    {% endif %}
+
+    <div class="card-container">
+        {% for item in class_data %}
+        <div class="class-card">
+            {% if item.obj.image %}
+                <img src="{{ item.obj.image.url }}" alt="{{ item.obj.name }}">
+            {% else %}
+                <img src="{% static 'images/default_class.jpg' %}" alt="Default Class Image">
+            {% endif %}
+            
+            <div class="class-content">
+                <h3>{{ item.obj.name }}</h3>
+                <p class="class-info"><strong>Instructor:</strong> {{ item.obj.teacher.name }} </p>
+                <p class="class-info"><strong>Schedule:</strong> {{ item.obj.date|date:"M d, Y H:i" }}</p>
+                <p class="class-info"><strong>Duration:</strong> {{ item.obj.duration }} min</p>
+                <p class="class-info"><strong>Fees:</strong> ₹{{ item.obj.amount  }} </p>
+                <p class="status {{ item.status|lower }}">{{ item.status }}</p>
+
+           
+
+{% if item.status == "Upcoming" %}
+    <p class="class-info"><strong>Registration closes:</strong> {{ item.registration_close|date:"M d, Y H:i" }}</p>
+{% endif %}
+
+
+                <div class="card-actions">
+                    {% if request.user.role == 'teacher' or request.user.is_superuser %}
+                        <a href="{% url 'update_class' item.obj.id %}" class="btn btn-primary btn-sm">Update</a>
+                        <a href="{% url 'delete_class' item.obj.id %}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete this class?');">Delete</a>
+                    {% endif %}
+
+                    {% if request.user.role == 'student' %}
+                        {% if item.status == "Completed" %}
+                            <button type="button" class="btn btn-secondary" disabled>Class Ended</button>
+                        {% elif item.obj.id in paid_classes %}
+                            <button type="button" class="btn" style="background-color: rgb(31, 147, 31); color: white;">Registered</button>
+                        {% elif not item.payment_open %}
+                            <button type="button" class="btn btn-warning" disabled>Registration Closed</button>
+                        {% else %}
+                            <a href="{% url 'payment' item.obj.id %}" class="btn btn-success">Payment</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p>No classes available at the moment.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

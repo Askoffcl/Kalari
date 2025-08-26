@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% block content %}
+  {% include 'side.html' %}
+
+<div class="container mt-4 d-flex justify-content-center">
+    <div class="card shadow-lg border-0 rounded-3" style="max-width: 950px; width: 100%; margin-left: 250px; margin-top: 50px;">
+        <div class="card-header" style="background-color:#800000; color:white;">
+            <h2 class="mb-0">Instructors</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle table-bordered text-center">
+                <thead style="background-color:#b03030; color:white;">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Experience (Years)</th>
+                        <th>Bio</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instructor in instructors %}
+                        <tr>
+                            <td>{{ instructor.username }}</td>
+                            <td>{{ instructor.email }}</td>
+                            <td>{{ instructor.phone }}</td>
+                            <td>{{ instructor.exp|default:"—" }}</td>
+                            <td>{{ instructor.bio|default:"—" }}</td>
+                            <td>
+                                {% if instructor.is_active %}
+                                    <span class="badge" style="background-color:#800000;">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if instructor.is_active %}
+                                    <a href="{% url 'deactive' instructor.id %}" 
+                                       class="btn btn-sm text-white px-3" 
+                                       style="background-color:#a83232; border:none;">
+                                        Deactivate
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'active' instructor.id %}" 
+                                       class="btn btn-sm text-white px-3" 
+                                       style="background-color:#800000; border:none;">
+                                        Activate
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No instructors found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

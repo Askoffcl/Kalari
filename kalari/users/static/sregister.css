@@ -1,0 +1,75 @@
+ main {
+    margin-top: 50px;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h2 {
+        margin-bottom: 20px;
+        font-size: 26px;
+        color: #333;
+      }
+
+      form {
+      
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      label {
+        font-weight: 500;
+      }
+
+      input,
+      select,textarea{
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        width: 100%;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 12px;
+    background-color:  #79443B;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      button:hover {
+     background-color:  #b7796e;
+      }
+.txt {
+  background-color:  #007bff;
+  padding: 60px 500px 0px 500px;
+  text-align: center;
+  color: white;
+  margin-top: 2px;
+  position: fixed;
+}
+
+.txt h1 {
+  font-size: 40px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.txt p {
+  font-size: 17px;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}

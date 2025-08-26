@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+  Account Settings
+  {% endblock %}
+
+  {% block extra_head %}
+  <link rel="stylesheet" href="{% static 'editProfile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <header class="header">
+    <h1>ACCOUNT SETTINGS</h1>
+  </header>
+
+  <div class="cards">
+    <div class="card">
+      <h3>CHANGE PASSWORD</h3>
+      <a href="/resetPassword" class="btn">RESET</a>
+    </div>
+    <div class="card">
+      <h3>CHANGE USERNAME</h3>
+      <a href="/changeUsername" class="btn">CHANGE</a>
+    </div>
+    <div class="card">
+      <h3>CHANGE PROFILE IMAGE</h3>
+      <a href="/changeImage" class="btn">CHANGE</a>
+    </div>
+  </div>
+
+{% endblock %}
